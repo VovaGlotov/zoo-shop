@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Зоомагазин</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@300;600&display=swap');
+
+    body {
+      background-color: #87CEFA;
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+
+    h1.title {
+      font-family: "Oswald", sans-serif;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .search {
+      display: block;
+      margin: 20px auto;
+      padding: 10px;
+      width: 250px;
+      font-size: 16px;
+    }
+
+    .card {
+      background: white;
+      width: 320px;
+      margin: 0 auto;
+      padding: 15px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      text-align: center;
+    }
+
+    .card img {
+      width: 100%;
+      border-radius: 10px;
+    }
+
+    .buttons {
+      margin: 10px 0;
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    button.main_buttons {
+      padding: 8px 12px;
+      font-size: 16px;
+      margin: 2px;
+      cursor: pointer;
+    }
+
+    .price {
+      color: green;
+    }
+
+    .btn {
+      padding: 10px 14px;
+      background: rgb(248, 168, 25);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      text-transform: uppercase;
+      font-size: 14px;
+    }
+
+    .btn:hover {
+      background: lightgreen;
+    }
+
+    .count {
+      font-weight: bold;
+      font-size: 18px;
+      min-width: 40px;
+      display: inline-block;
+      margin: 0 6px;
+    }
+
+    .buttons22 button{
+      margin-right:20px;
+      margin-left: 20px;
+    }
+
+    .cart {
+      position: fixed;
+      top: 15px;
+      right: 15px;
+      background: white;
+      padding: 10px 16px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      font-weight: bold;
+      cursor: pointer;
+      z-index: 10;
+    }
+
+    .cart .clear-btn {
+      margin-top: 8px;
+      width: 100%;
+      padding: 8px 10px;
+      font-size: 12px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      background: #ff5b5b;
+      color: white;
+      text-transform: uppercase;
+      font-weight: bold;
+    }
+
+    .cart .clear-btn:hover {
+      background: #ff2f2f;
+    }
+
+    .totalBox {
+      position: fixed;
+      right: 15px;
+      bottom: 15px;
+      background: white;
+      padding: 12px 16px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      font-weight: bold;
+      z-index: 10;
+      min-width: 170px;
+      text-align: center;
+    }
+
+    .totalBox span {
+      color: green;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="cart">
+    🛒 Корзина: <span id="cartCount">0</span>
+    <button class="clear-btn" id="clearCart">Очистить</button>
+  </div>
+
+  <div class="totalBox">
+    Итого: <span id="totalSum">0</span> ₽
+  </div>
+
+  <h1 class="title">🐾 Зоомагазин</h1>
+
+  <input class="search" placeholder="Поиск товара...">
+
+  <div class="card">
+    <img id="photo" src="https://avatars.mds.yandex.net/get-mpic/4577446/img_id5777841280263532798.jpeg/orig" alt="Корм" >
+
+    <h4 id="name">Корм для собак Сириус "Ягненок с рисом"</h4>
+
+    <div class="buttons">
+      <button class="main_buttons btn" id="minus">-</button>
+      <span class="count" id="count">1</span>
+      <button class="main_buttons btn" id="plus">+</button>
+      <button class="main_buttons btn" id="resetCount">Сброс</button>
+    </div>
+
+    <div class="buttons22">
+      <button class="main_buttons btn" id="prv"><</button>
+      <button class="main_buttons btn" id="next">></button>
+    </div>
+
+    <h4>Описание</h4>
+    <p id="desc">Самый лучший корм на диком Западе</p>
+
+    <h2 class="price" id="price">Цена: 8000 ₽</h2>
+    <h3 id="weight">Вес товара: 12 кг</h3>
+
+    <div class="buttons">
+      <button class="btn" id="buy">Заказать</button>
+    </div>
+  </div>
+
+  <script>
+    const minusBtn = document.querySelector("#minus");
+    const plusBtn = document.querySelector("#plus");
+    const resetCountBtn = document.querySelector("#resetCount");
+    const buyBtn = document.querySelector("#buy");
+    const countEl = document.querySelector("#count");
+
+    const cartCountEl = document.querySelector("#cartCount");
+    const totalSumEl = document.querySelector("#totalSum");
+    const clearCartBtn = document.querySelector("#clearCart");
+
+    let count = 1;
+    let inCart = 0;
+    let totalSum = 0;
+
+    function updateCountUI() {
+      countEl.textContent = count;
+    }
+
+    function updateCartUI() {
+      cartCountEl.textContent = inCart;
+      totalSumEl.textContent = totalSum;
+    }
+
+    minusBtn.onclick = () => {
+      if (count > 1) {
+        count--;
+        updateCountUI();
+      }
+    };
+
+    plusBtn.onclick = () => {
+      count++;
+      updateCountUI();
+    };
+
+    resetCountBtn.onclick = () => {
+      count = 1;
+      updateCountUI();
+    };
+
+    // -------- Товары --------
+    let nameItem = document.querySelector("#name");
+    let descItem = document.querySelector("#desc");
+    let priceItem = document.querySelector("#price");
+    let photoItem = document.querySelector("#photo");
+    let weightItem = document.querySelector("#weight");
+    const prevBtn = document.querySelector("#prv");
+    const nextBtn = document.querySelector("#next");
+
+    const items = [
+      {
+        name: "Корм для собак Сириус \"Ягненок с рисом\"",
+        desc: "Самый лучший корм на диком Западе",
+        priceText: "Цена: 8000 ₽",
+        priceNum: 8000,
+        weight: "Вес товара: 12 кг",
+        photo: "https://avatars.mds.yandex.net/get-mpic/4577446/img_id5777841280263532798.jpeg/orig"
+      },
+      {
+        name: "Корм для кошек \"Курица\"",
+        desc: "Накорми своего котика поскорее",
+        priceText: "Цена: 900 ₽",
+        priceNum: 900,
+        weight: "Вес товара: 750 г",
+        photo: "https://avatars.mds.yandex.net/get-mpic/12523390/img_id4270573983319000458.jpeg/orig"
+      },
+      {
+        name: "Корм для хомяков",
+        desc: "Хомячок уже ждёт вкусняшку 🐹",
+        priceText: "Цена: 1150 ₽",
+        priceNum: 1150,
+        weight: "Вес товара: 1 кг",
+        photo: "https://ir.ozone.ru/s3/multimedia-1-v/7695434479.jpg"
+      },
+      {
+        name: "Корм для попугаев",
+        desc: "Кеша будет танцевать 🦜",
+        priceText: "Цена: 1590 ₽",
+        priceNum: 1590,
+        weight: "Вес товара: 1 кг",
+        photo: "https://ir.ozone.ru/s3/multimedia-1-d/8298932341.jpg"
+      }
+    ];
+
+    let currentItem = 0;
+
+    function renderItem() {
+      nameItem.innerText = items[currentItem].name;
+      descItem.innerText = items[currentItem].desc;
+      priceItem.innerText = items[currentItem].priceText;
+      weightItem.innerText = items[currentItem].weight;
+      photoItem.src = items[currentItem].photo;
+
+      // когда переключили товар — сбросим количество на 1 (логично)
+      count = 1;
+      updateCountUI();
+    }
+
+    nextBtn.onclick = () => {
+      currentItem++;
+      if (currentItem >= items.length) currentItem = 0;
+      renderItem();
+    };
+
+    prevBtn.onclick = () => {
+      currentItem--;
+      if (currentItem < 0) currentItem = items.length - 1;
+      renderItem();
+    };
+
+    // -------- Заказ / корзина --------
+    buyBtn.onclick = () => {
+      const priceNow = items[currentItem].priceNum;
+
+      inCart += count;
+      totalSum += priceNow * count;
+
+      updateCartUI();
+
+      const text = inCart === 1
+        ? "Товар добавлен в корзину"
+        : `В корзине ${inCart} товаров`;
+
+      alert(text);
+
+      count = 1;
+      updateCountUI();
+    };
+
+    clearCartBtn.onclick = () => {
+      inCart = 0;
+      totalSum = 0;
+      updateCartUI();
+      alert("Корзина очищена");
+    };
+
+    // старт
+    updateCountUI();
+    updateCartUI();
+    renderItem();
+  </script>
+</body>
+</html>
